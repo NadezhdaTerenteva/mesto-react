@@ -18,7 +18,7 @@ function App () {
     <Main />
     <Footer />
   </div>
-
+  
     <PopupWithForm 
         title='Редактировать профиль'
         name='profile'
