@@ -1,10 +1,14 @@
-function ImagePopup() {
+function ImagePopup({card, onClose}) {
     return (
-<div className="popup popup_preview" id="popup-preview">
+<div className={`popup ${card ? "popup_preview" : ''}`} id="popup-preview"> 
     <div className="popup__photo-preview">
-      <button className="popup__close-button" type="button" />
-      <img src="<%=require('./images/altai_aleksandr-shemetillo--EWU60lOeys-unsplash.jpg')%>" alt="Фото" className="popup__photo-preview-img" />
-      <h2 className="popup__photo-preview-title" />
+      <button 
+      className="popup__close-button" 
+      type="button"
+      onClick={onClose}
+      />
+      <img src='' alt="Foto" className="popup__photo-preview-img"/>
+      <h2 className="popup__photo-preview-title"></h2>
     </div>
   </div>
     );
