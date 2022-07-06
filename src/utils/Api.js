@@ -74,7 +74,8 @@ export default class Api {
         body: JSON.stringify({
           _id: cardId,
         }),
-      }).then(this._checkResult);
+      }
+    ).then(this._checkResult);
   }
 
   setLikes(cardId, likes) {
@@ -87,7 +88,8 @@ export default class Api {
           _id: cardId,
           likes: [],
         }),
-      }).then(this._checkResult);
+      }
+    ).then(this._checkResult);
   }
 
   deleteLikes(cardId) {
@@ -99,10 +101,10 @@ export default class Api {
         body: JSON.stringify({
           _id: cardId,
         }),
-      }).then(this._checkResult);
+      }
+    ).then(this._checkResult);
   }
 }
-
 
 export const api = new Api(
   "https://mesto.nomoreparties.co/v1/cohort-43",
