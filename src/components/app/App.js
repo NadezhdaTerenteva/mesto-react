@@ -13,7 +13,7 @@ function App() {
 
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
 
-  const [selectedCard, setSelectedCard] = useState(undefined);
+  const [selectedCard, setSelectedCard] = useState(null);
 
   function handleEditProfileClick() {
     setIsEditProfilePopupOpen(true);
@@ -54,6 +54,7 @@ function App() {
       <PopupWithForm
         title="Редактировать профиль"
         name="profile"
+        button="Сохранить"
         isOpen={isEditProfilePopupOpen}
         onClose={closeAllPopups}
       >
@@ -79,14 +80,13 @@ function App() {
           maxLength={200}
         />
         <span id="about-error" />
-        <button className="popup__submit-button" type="submit">
-          Сохранить
-        </button>
+        
       </PopupWithForm>
 
       <PopupWithForm
         title="Обновить аватар"
         name="avatar"
+        button="Сохранить"
         isOpen={isEditAvatarPopupOpen}
         onClose={closeAllPopups}
       >
@@ -99,14 +99,13 @@ function App() {
           required
         />
         <span id="avatar-error" />
-        <button className="popup__submit-button" type="submit">
-          Сохранить
-        </button>
+        
       </PopupWithForm>
 
       <PopupWithForm
         title="Новое место"
         name="place"
+        button="Создать"
         isOpen={isAddPlacePopupOpen}
         onClose={closeAllPopups}
       >
@@ -130,21 +129,17 @@ function App() {
           required
         />
         <span id="link-error" />
-        <button className="popup__submit-button" type="submit">
-          Создать
-        </button>
+        
       </PopupWithForm>
 
-      <PopupWithForm title="Вы уверены?" name="confirm">
+      <PopupWithForm 
+        title="Вы уверены?" 
+        name="confirm"
+        button="Да"
+        >
         <button className="popup__close-button" type="button" />
         <h3 className="popup__header popup__header_confirm">Вы уверены?</h3>
-        <button
-          className="popup__submit-button"
-          id="confirm-button"
-          type="button"
-        >
-          Да
-        </button>
+        
       </PopupWithForm>
 
       <ImagePopup card={selectedCard} onClose={closeAllPopups}></ImagePopup>

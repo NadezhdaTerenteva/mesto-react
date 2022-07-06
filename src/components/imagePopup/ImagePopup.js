@@ -1,5 +1,5 @@
 function ImagePopup({ card, onClose }) {
-  return card ? (
+  return (
     <div
       className={`popup popup_preview ${card && "popup_opened"}`}
       id="popup-preview"
@@ -9,12 +9,13 @@ function ImagePopup({ card, onClose }) {
           className="popup__close-button"
           type="button"
           onClick={onClose}
-        />
-        <img src={card.link} alt="Foto" className="popup__photo-preview-img" />
-        <h2 className="popup__photo-preview-title"></h2>
+        /> 
+        {/* optional chaining */}
+        <img src={card?.link} alt="Foto" className="popup__photo-preview-img" />
+        <h2 className="popup__photo-preview-title">{card?.name}</h2>
       </div>
     </div>
-  ) : null;
+  )
 }
 
 export default ImagePopup;

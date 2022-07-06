@@ -4,11 +4,11 @@ import { api } from "../../utils/Api.js";
 import Card from "../card/Card.js";
 
 function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick }) {
-  const [userName, setUserName] = useState();
+  const [userName, setUserName] = useState('');
 
-  const [userDescription, setUserDescription] = useState();
+  const [userDescription, setUserDescription] = useState('');
 
-  const [userAvatar, setUserAvatar] = useState();
+  const [userAvatar, setUserAvatar] = useState('');
 
   const [cards, setCards] = useState([]);
 
@@ -75,6 +75,7 @@ function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick }) {
                 key={item._id}
                 name={item.name}
                 link={item.link}
+                likes={item.likes}
                 onCardClick={() => onCardClick(item)}
               />
             );
