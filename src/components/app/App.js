@@ -1,12 +1,22 @@
 import { useState, useEffect } from "react";
 
+import { api } from "../../utils/Api.js";
+
 import Footer from "../footer/Footer.js";
 import Header from "../header/Header.js";
 import Main from "../main/Main.js";
 import PopupWithForm from "../popupWithForm/PopupWithForm.js";
 import ImagePopup from "../imagePopup/ImagePopup.js";
+import EditProfilePopup from "../editProfilePopup/EditProfilePopup.js";
+import EditAvatarPopup from "../editAvatarPopup/EditAvatarPopup.js";
+import Card from "../card/Card.js"; 
+
+import { CurrentUserContext } from '../../contexts/CurrentUserContext.js';
 
 function App() {
+
+  const [currentUser, setCurrentUser] = useState({name: '', about: ''});
+
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
 
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
@@ -14,6 +24,21 @@ function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
 
   const [selectedCard, setSelectedCard] = useState(null);
+
+  //const [cards, setCards] = useState([]);
+
+
+  useEffect(() => {
+    api
+      .getUserInfo()
+      .then((res) => {
+        setCurrentUser(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
 
   function handleEditProfileClick() {
     setIsEditProfilePopupOpen(true);
@@ -38,7 +63,32 @@ function App() {
     setSelectedCard(card);
   }
 
+  function handleUpdateUser(userData) {
+    api
+    .setUserInfo(userData)
+    .then((res) => {
+      setCurrentUser(res);
+      closeAllPopups();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  }
+
+  function handleUpdateAvatar(userData) {
+    api
+    .changeUserAvatar(userData)
+    .then((res) => {
+      setCurrentUser(res);
+      closeAllPopups();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  }
+
   return (
+    <CurrentUserContext.Provider value={currentUser}>
     <div className="body">
       <div className="page">
         <Header />
@@ -51,56 +101,15 @@ function App() {
         <Footer />
       </div>
 
-      <PopupWithForm
-        title="Редактировать профиль"
-        name="profile"
-        button="Сохранить"
-        isOpen={isEditProfilePopupOpen}
-        onClose={closeAllPopups}
-      >
-        <input
-          type="text"
-          name="name"
-          defaultValue="Жак-Ив Кусто"
-          className="popup__input"
-          id="name"
-          required
-          minLength={2}
-          maxLength={40}
-        />
-        <span id="name-error" />
-        <input
-          type="text"
-          name="about"
-          defaultValue="Исследователь океана"
-          className="popup__input"
-          id="about"
-          required
-          minLength={2}
-          maxLength={200}
-        />
-        <span id="about-error" />
-        
-      </PopupWithForm>
+      <EditProfilePopup 
+        isOpen={isEditProfilePopupOpen} 
+        onClose={closeAllPopups} 
+        onUpdateUser={handleUpdateUser} />
 
-      <PopupWithForm
-        title="Обновить аватар"
-        name="avatar"
-        button="Сохранить"
-        isOpen={isEditAvatarPopupOpen}
-        onClose={closeAllPopups}
-      >
-        <input
-          type="url"
-          name="avatar"
-          placeholder="Ссылка на изображение"
-          className="popup__input"
-          id="avatar"
-          required
-        />
-        <span id="avatar-error" />
-        
-      </PopupWithForm>
+      <EditAvatarPopup 
+        isOpen={isEditAvatarPopupOpen} 
+        onClose={closeAllPopups} 
+        onUpdateAvatar={handleUpdateAvatar} /> 
 
       <PopupWithForm
         title="Новое место"
@@ -144,6 +153,7 @@ function App() {
 
       <ImagePopup card={selectedCard} onClose={closeAllPopups}></ImagePopup>
     </div>
+    </CurrentUserContext.Provider>
   );
 }
 

@@ -1,4 +1,4 @@
-function PopupWithForm({ title, name, button, children, isOpen, onClose }) {
+function PopupWithForm({ title, name, button, children, isOpen, onClose, onSubmit }) {
   return (
     <div className={`popup ${isOpen && "popup_opened"}`} id={`popup-${name}`}>
       <div className="popup__content">
@@ -9,6 +9,7 @@ function PopupWithForm({ title, name, button, children, isOpen, onClose }) {
         />
         <h3 className="popup__header">{title}</h3>
         <form
+          onSubmit={onSubmit}
           name={`${name}-data`}
           className="popup__form"
           id={`${name}-data-form`}
