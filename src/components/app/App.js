@@ -9,6 +9,7 @@ import PopupWithForm from "../popupWithForm/PopupWithForm.js";
 import ImagePopup from "../imagePopup/ImagePopup.js";
 import EditProfilePopup from "../editProfilePopup/EditProfilePopup.js";
 import EditAvatarPopup from "../editAvatarPopup/EditAvatarPopup.js";
+import AddPlacePopup from "../addPlacePopup/AddPlacePopup.js";
 import Card from "../card/Card.js"; 
 
 import { CurrentUserContext } from '../../contexts/CurrentUserContext.js';
@@ -25,9 +26,9 @@ function App() {
 
   const [selectedCard, setSelectedCard] = useState(null);
 
-  //const [cards, setCards] = useState([]);
+  const [cards, setCards] = useState([]);
 
-
+// Получаем данные пользователя
   useEffect(() => {
     api
       .getUserInfo()
@@ -39,6 +40,77 @@ function App() {
       });
   }, []);
 
+// Получаем карточки
+
+  useEffect(() => {
+    api
+      .getCards()
+      .then((cards) => {
+        setCards(cards);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+  const cardList = 
+  cards.map((item) => {
+    return (
+      <Card
+        key={item._id}
+        card={item}
+        onCardClick={handleCardClick}
+        onCardLike={handleCardLike}
+        onCardDelete={handleCardDelete}
+      />
+    );
+  })
+
+  function handleCardLike(card) {
+    // Снова проверяем, есть ли уже лайк на этой карточке
+    const isLiked = card.likes.some((i) => i._id === currentUser._id);
+
+    // Отправляем запрос в API и получаем обновлённые данные карточки
+    if (!isLiked) {
+      api
+        .setLikes(card._id, !isLiked)
+        .then((newCard) => {
+          setCards((state) =>
+            state.map((c) => (c._id === card._id ? newCard : c))
+          );
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      api
+        .deleteLikes(card._id, !isLiked)
+        .then((newCard) => {
+          setCards((state) =>
+            state.map((c) => (c._id === card._id ? newCard : c))
+          );
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }
+
+  function handleCardDelete(card) {
+    const isOwn = card.owner._id === currentUser._id;
+
+    if (isOwn) {
+      api
+        .deleteCard(card._id)
+        .then(() => {
+          const newCards = cards.filter((i) => card._id !== i._id);
+          setCards(newCards);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }
 
   function handleEditProfileClick() {
     setIsEditProfilePopupOpen(true);
@@ -87,6 +159,19 @@ function App() {
     });
   }
 
+  function handleAddPlaceSubmit(card) {
+    api
+    .addCard(card)
+    .then((newCard) => {
+      setCards(([newCard, ...cards]));
+      closeAllPopups();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+
+  }
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
     <div className="body">
@@ -97,6 +182,9 @@ function App() {
           onAddPlace={handleAddPlaceClick}
           onEditAvatar={handleEditAvatarClick}
           onCardClick={handleCardClick}
+          onCardLike={handleCardLike}
+          onCardDelete={handleCardDelete}
+          cards={cardList}
         />
         <Footer />
       </div>
@@ -111,35 +199,11 @@ function App() {
         onClose={closeAllPopups} 
         onUpdateAvatar={handleUpdateAvatar} /> 
 
-      <PopupWithForm
-        title="Новое место"
-        name="place"
-        button="Создать"
-        isOpen={isAddPlacePopupOpen}
-        onClose={closeAllPopups}
-      >
-        <input
-          type="text"
-          name="place"
-          placeholder="Название"
-          className="popup__input"
-          id="place"
-          required
-          minLength={2}
-          maxLength={30}
-        />
-        <span id="place-error" />
-        <input
-          type="url"
-          name="link"
-          placeholder="Ссылка на картинку"
-          className="popup__input"
-          id="link"
-          required
-        />
-        <span id="link-error" />
-        
-      </PopupWithForm>
+      <AddPlacePopup 
+        isOpen={isAddPlacePopupOpen} 
+        onClose={closeAllPopups} 
+        onAddPlace={handleAddPlaceSubmit}
+        /> 
 
       <PopupWithForm 
         title="Вы уверены?" 

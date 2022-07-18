@@ -1,71 +1,9 @@
-import React, { useState, useEffect } from "react";
-
-import { api } from "../../utils/Api.js";
-import Card from "../card/Card.js";
+import React from "react";
 
 import { CurrentUserContext } from "../../contexts/CurrentUserContext.js";
 
-function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick }) {
+function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick, onCardLike, onCardDelete, cards }) {
   const currentUser = React.useContext(CurrentUserContext);
-
-  const [cards, setCards] = useState([]);
-
-  useEffect(() => {
-    api
-      .getCards()
-      .then((res) => {
-        setCards(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
-
-  function handleCardLike(card) {
-    // Снова проверяем, есть ли уже лайк на этой карточке
-    const isLiked = card.likes.some((i) => i._id === currentUser._id);
-
-    // Отправляем запрос в API и получаем обновлённые данные карточки
-    if (!isLiked) {
-      api
-        .setLikes(card._id, !isLiked)
-        .then((newCard) => {
-          setCards((state) =>
-            state.map((c) => (c._id === card._id ? newCard : c))
-          );
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    } else {
-      api
-        .deleteLikes(card._id, !isLiked)
-        .then((newCard) => {
-          setCards((state) =>
-            state.map((c) => (c._id === card._id ? newCard : c))
-          );
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-  }
-
-  function handleCardDelete(card) {
-    const isOwn = card.owner._id === currentUser._id;
-
-    if (isOwn) {
-      api
-        .deleteCard(card._id)
-        .then(() => {
-          const newCards = cards.filter((i) => card._id !== i._id);
-          setCards(newCards);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-  }
 
   return (
     <main className="content">
@@ -100,17 +38,7 @@ function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick }) {
       </section>
       <section className="photo-grid">
         <ul className="photo-grid__items">
-          {cards.map((item) => {
-            return (
-              <Card
-                key={item._id}
-                card={item}
-                onCardClick={() => onCardClick(item)}
-                onCardLike={handleCardLike}
-                onCardDelete={handleCardDelete}
-              />
-            );
-          })}
+          {cards}
         </ul>
       </section>
     </main>
