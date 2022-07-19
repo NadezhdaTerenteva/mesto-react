@@ -2,7 +2,15 @@ import React from "react";
 
 import { CurrentUserContext } from "../../contexts/CurrentUserContext.js";
 
-function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick, onCardLike, onCardDelete, cards }) {
+function Main({
+  onEditProfile,
+  onAddPlace,
+  onEditAvatar,
+  onCardClick,
+  onCardLike,
+  onCardDelete,
+  cards,
+}) {
   const currentUser = React.useContext(CurrentUserContext);
 
   return (
@@ -37,9 +45,7 @@ function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick, onCardLike
         />
       </section>
       <section className="photo-grid">
-        <ul className="photo-grid__items">
-          {cards}
-        </ul>
+        <ul className="photo-grid__items">{cards}</ul>
       </section>
     </main>
   );

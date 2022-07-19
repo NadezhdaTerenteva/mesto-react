@@ -1,8 +1,7 @@
 import React from "react";
-import { useState, useEffect } from "react";
-import { CurrentUserContext } from "../../contexts/CurrentUserContext.js";
+import { useState } from "react";
 
-import PopupWithForm from "../popupWithForm/PopupWithForm";
+import PopupWithForm from "../popupWithForm/PopupWithForm.js";
 
 function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
   const [placeName, setPlaceName] = useState("");
@@ -24,6 +23,8 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
       place: placeName,
       link: link,
     });
+    setPlaceName("");
+    setLink("");
   }
 
   return (
@@ -36,7 +37,7 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
       onSubmit={handleSubmit}
     >
       <input
-        value={placeName}
+        value={placeName || ""}
         onChange={handleAddPlaceName}
         type="text"
         name="place"
@@ -49,7 +50,7 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
       />
       <span id="place-error" />
       <input
-        value={link}
+        value={link || ""}
         onChange={handleAddPlaceLink}
         type="url"
         name="link"
