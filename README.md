@@ -11,3 +11,5 @@ In the project directory, you can run:
 ### `npm run start`
 to see the web-page in browser. 
 
+To see the online-version click the [link](https://nadezhdaterenteva.github.io/mesto-react/).
+
