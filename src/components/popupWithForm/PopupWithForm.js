@@ -21,7 +21,6 @@ function PopupWithForm({
           name={`${name}-data`}
           className="popup__form"
           id={`${name}-data-form`}
-          noValidate
         >
           {children}
           <button className="popup__submit-button" type="submit">
